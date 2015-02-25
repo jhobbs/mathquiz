@@ -34,7 +34,7 @@ class Question(object):
         print(self.explain())
         answer = raw_input(self.question_string())
         if not self.check_answer(answer):
-            print "Wrong!"
+            print "Wrong! The correct answer is: %s" % (self.answer)
             return 0
         
         print "Correct"
