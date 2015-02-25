@@ -4,8 +4,17 @@ from abc import (
     abstractmethod,
     )
 
+
 class Question(object):
     __metaclass__ = ABCMeta
+
+    def __init__(self):
+        self.question = self._generate()
+
+    @abstractmethod
+    def _generate(self):
+        """Generate the question."""
+        pass
 
     @abstractmethod
     def explain(self):
@@ -17,9 +26,8 @@ class Question(object):
         """Return the question string itself."""
         pass
 
-    @abstractmethod
     def check_answer(self, answer):
-        """Check an answer. Return True if correct, False otherwise."""
+        return answer == self.answer
         pass
 
     def ask(self):
@@ -35,32 +43,29 @@ class Question(object):
 
 class ComparisonQuestion(Question):
     """Compare two integers using <, > and =."""
-    def __init__(self):
-        self.question = self._generate()
-
     def _generate(self):
-        a = random.randint(0, 100000)
+        self.a = random.randint(0, 100000)
 
         if random.randint(0, 4) == 0:
-            return (a, a, '=')
+            self.b = self.a
+            self.answer = '='
+            return
 
-        b = random.randint(0, 100000)
-        while b == a:
-            b = random.randint(0, 100000)
+        self.b = random.randint(0, 100000)
+        while self.b == self.a:
+            self.b = random.randint(0, 100000)
         
-        if a > b:
-            return (a, b, '>')
+        if self.a > self.b:
+            self.answer = '>'
+            return
 
-        return (a, b, '<')
+        self.answer = '<'
 
     def explain(self):
         return "Fill in the blank with '<', '>' or ="
 
     def question_string(self):
-        return "%d _ %d  " % (self.question[0], self.question[1])
-
-    def check_answer(self, answer):
-        return answer == self.question[2]
+        return "%d _ %d  " % (self.a, self.b)
 
 
 def find_next_multiple(number, factor, direction):
@@ -79,9 +84,6 @@ def find_next_multiple(number, factor, direction):
 
 
 class NextMultipleQuestion(Question):
-    def __init__(self):
-        self.question = self._generate()
-
     def _generate(self):
         self.number = random.randint(0, 100000)
         self.factor = random.choice([10,100,10000])
