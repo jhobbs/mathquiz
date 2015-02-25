@@ -5,6 +5,26 @@ from abc import (
     )
 
 
+good_names = [
+    'genius',
+    'whizkid',
+    'smarty pants',
+    'Doctor',
+    'master',
+    'winner',
+    'your awesomeness',
+    ]
+
+bad_names = [
+    'doofus',
+    'cretin',
+    'loser',
+    'half-wit',
+    'meathead',
+    'imbecile',
+    'chump',
+    ]
+
 class Question(object):
     __metaclass__ = ABCMeta
 
@@ -34,10 +54,11 @@ class Question(object):
         print(self.explain())
         answer = raw_input(self.question_string())
         if not self.check_answer(answer):
-            print "Wrong! The correct answer is: %s" % (self.answer)
+            print "Wrong, %s! The correct answer is: %s" % (
+                random.choice(bad_names), self.answer)
             return 0
         
-        print "Correct"
+        print "Correct, %s!" % (random.choice(good_names))
         return 1
 
 
