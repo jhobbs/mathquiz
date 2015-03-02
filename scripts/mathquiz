@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 
-from mathquiz.quiz import run_quiz
-
-def main():
-    run_quiz(10)
+import sys
+from mathquiz.quiz import main
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv)

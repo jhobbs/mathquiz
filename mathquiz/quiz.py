@@ -1,5 +1,15 @@
 import random
+
+from argparse import ArgumentParser
+
 from mathquiz.questions import questions
+
+def main(argv):
+    parser = ArgumentParser(description="Enjoy a math quiz.")
+    parser.add_argument("--num_questions",
+        help="Number of questions in the quiz.", default=10, type=int)
+    args = parser.parse_args(argv[1:])
+    run_quiz(args.num_questions)
 
 
 def run_quiz(num_questions):
