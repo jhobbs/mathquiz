@@ -153,17 +153,3 @@ questions = [
     NextMultipleQuestion,
     AdditionQuestion,
     ]
-
-
-def run_quiz(num_questions):
-    num_correct = sum([
-        random.choice(questions)().ask()
-        for _ in xrange(num_questions)])
-    
-    print("You got %d out of %d questions right!" % (num_correct, num_questions))
-
-def main():
-    run_quiz(10)
-
-if __name__ == '__main__':
-    main()
