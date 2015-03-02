@@ -25,6 +25,14 @@ bad_names = [
     'chump',
     ]
 
+
+def random_digit():
+    base = random.randint(0, 4)
+    min_val = 10**base
+    max_val = 10**(base+1)
+    return random.randint(min_val, max_val)
+
+
 class Question(object):
     __metaclass__ = ABCMeta
 
@@ -47,8 +55,7 @@ class Question(object):
         pass
 
     def check_answer(self, answer):
-        return answer == self.answer
-        pass
+        return str(answer) == str(self.answer)
 
     def ask(self):
         print(self.explain())
@@ -65,16 +72,16 @@ class Question(object):
 class ComparisonQuestion(Question):
     """Compare two integers using <, > and =."""
     def _generate(self):
-        self.a = random.randint(0, 100000)
+        self.a = random_digit()
 
         if random.randint(0, 4) == 0:
             self.b = self.a
             self.answer = '='
             return
 
-        self.b = random.randint(0, 100000)
+        self.b = random_digit()
         while self.b == self.a:
-            self.b = random.randint(0, 100000)
+            self.b = random_digit()
         
         if self.a > self.b:
             self.answer = '>'
@@ -87,6 +94,19 @@ class ComparisonQuestion(Question):
 
     def question_string(self):
         return "%d _ %d  " % (self.a, self.b)
+
+
+class AdditionQuestion(Question):
+    def _generate(self):
+        self.a = random_digit()
+        self.b = random_digit()
+        self.answer = self.a + self.b
+
+    def explain(self):
+        return "Add the two numbers."
+
+    def question_string(self):
+        return "%d + %d = " % (self.a, self.b)
 
 
 def find_next_multiple(number, factor, direction):
@@ -106,7 +126,7 @@ def find_next_multiple(number, factor, direction):
 
 class NextMultipleQuestion(Question):
     def _generate(self):
-        self.number = random.randint(0, 100000)
+        self.number = random_digit()
         self.factor = random.choice([10,100,10000])
         self.direction = random.choice(['up', 'down'])
         self.answer = find_next_multiple(
@@ -131,6 +151,7 @@ class NextMultipleQuestion(Question):
 questions = [
     ComparisonQuestion,
     NextMultipleQuestion,
+    AdditionQuestion,
     ]
 
 
