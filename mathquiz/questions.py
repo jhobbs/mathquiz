@@ -153,7 +153,7 @@ class CountByQuestion(Question):
     def _generate(self):
         self.offset = random.randint(0,9)
         self.count_by = random.randint(0,9)
-        iterations = random.randint(0,9)
+        iterations = random.randint(1,9)
         self.answer_list = [
             "%d" % (self.offset + self.count_by * i)
             for i in range(0,iterations)]
@@ -168,9 +168,23 @@ class CountByQuestion(Question):
             self.count_by, self.offset, self.answer_list[-1])
 
 
+class MultiplicationQuestion(Question):
+    def _generate(self):
+        self.a = random_digit(max_exp=0)
+        self.b = random_digit(max_exp=0)
+        self.answer = self.a * self.b
+
+    def explain(self):
+        return "Multiply the two numbers."
+
+    def question_string(self):
+        return "%d * %d = " % (self.a, self.b)
+
+
 questions = [
     ComparisonQuestion,
     NextMultipleQuestion,
     AdditionQuestion,
     CountByQuestion,
+    MultiplicationQuestion,
     ]
