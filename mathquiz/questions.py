@@ -26,8 +26,8 @@ bad_names = [
     ]
 
 
-def random_digit():
-    base = random.randint(0, 4)
+def random_digit(max_exp=4):
+    base = random.randint(0, max_exp)
     min_val = 10**base
     max_val = 10**(base+1)
     return random.randint(min_val, max_val)
@@ -148,8 +148,29 @@ class NextMultipleQuestion(Question):
             return False
 
 
+class CountByQuestion(Question):
+    """Count by an integer"""
+    def _generate(self):
+        self.offset = random.randint(0,9)
+        self.count_by = random.randint(0,9)
+        iterations = random.randint(0,9)
+        self.answer_list = [
+            "%d" % (self.offset + self.count_by * i)
+            for i in range(0,iterations)]
+        self.answer = " ".join(self.answer_list)
+
+    def explain(self):
+        return ("Count by a number from one number to another. For example, "
+                "count by 5's starting at 3 up to 23: 3 8 13 18 23")
+
+    def question_string(self):
+        return "Count by %d's starting at %d up to %s: " % (
+            self.count_by, self.offset, self.answer_list[-1])
+
+
 questions = [
     ComparisonQuestion,
     NextMultipleQuestion,
     AdditionQuestion,
+    CountByQuestion,
     ]
