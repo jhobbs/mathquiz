@@ -2,6 +2,7 @@ import random
 from abc import (
     ABCMeta,
     abstractmethod,
+    abstractproperty,
     )
 
 
@@ -36,8 +37,16 @@ def random_digit(max_exp=4):
 class Question(object):
     __metaclass__ = ABCMeta
 
-    def __init__(self):
+    options = dict()
+
+    def __init__(self, options):
+        self.provided_options = options
         self.question = self._generate()
+
+    @abstractproperty
+    def name(self):
+        """A short name to be used in option generation."""
+        pass
 
     @abstractmethod
     def _generate(self):
@@ -70,6 +79,8 @@ class Question(object):
 
 
 class ComparisonQuestion(Question):
+    name = "comparison"
+
     """Compare two integers using <, > and =."""
     def _generate(self):
         self.a = random_digit()
@@ -97,9 +108,11 @@ class ComparisonQuestion(Question):
 
 
 class AdditionQuestion(Question):
+    name = "addition"
+
     def _generate(self):
-        self.a = random_digit()
-        self.b = random_digit()
+        self.a = random_digit(max_exp=self.provided_options.get('max_exp'))
+        self.b = random_digit(max_exp=self.provided_options.get('max_exp'))
         self.answer = self.a + self.b
 
     def explain(self):
@@ -107,6 +120,14 @@ class AdditionQuestion(Question):
 
     def question_string(self):
         return "%d + %d = " % (self.a, self.b)
+
+    options = {
+        'max_exp': {
+            'help': 'maximum power of 10 for numbers used in addition.',
+            'default': 4,
+            'type': int,
+            }
+    }
 
 
 def find_next_multiple(number, factor, direction):
@@ -125,6 +146,8 @@ def find_next_multiple(number, factor, direction):
 
 
 class NextMultipleQuestion(Question):
+    name = "next-multiple"
+
     def _generate(self):
         self.number = random_digit()
         self.factor = random.choice([10,100,10000])
@@ -149,6 +172,8 @@ class NextMultipleQuestion(Question):
 
 
 class CountByQuestion(Question):
+    name = "count-by"
+
     """Count by an integer"""
     def _generate(self):
         self.offset = random.randint(0,9)
@@ -169,6 +194,8 @@ class CountByQuestion(Question):
 
 
 class MultiplicationQuestion(Question):
+    name = "multiplication"
+
     def _generate(self):
         self.a = random_digit(max_exp=0)
         self.b = random_digit(max_exp=0)
