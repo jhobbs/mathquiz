@@ -36,11 +36,18 @@ def add_argument_from_option(parser, module_name, option):
 
 class ConsoleQuizRunner(object):
     def __init__(self, questions):
-        self.quiz = Quiz(questions)
+        self.questions =questions
 
     def run(self, argv):
         self.parse_args(argv)
-        results = self.quiz.run(self.args)
+        if self.args.include is not None:
+            questions = [
+                question for question in self.questions
+                if question.name in self.args.include]
+        else:
+            questions = self.questions
+        quiz = Quiz(questions)
+        results = quiz.run(self.args)
         if self.args.bucket:
             store_quiz_results(args.bucket, args.user, results)
         print_quiz_result(results)
@@ -51,12 +58,15 @@ class ConsoleQuizRunner(object):
             help="Number of questions in the quiz.", default=10, type=int)
         parser.add_argument("-b", "--bucket",
             help="Name of S3 bucket.", default=os.environ.get('MATHQUIZ_BUCKET'))
-        self.add_quiz_args(parser)
+        parser.add_argument("-i", "--include",
+            nargs="+",
+            help="questions to include. by default, all are included, but if this is specified only those specified are included.")
+        self.add_question_args(parser)
         parser.add_argument("user", help="Name of user.")
         self.args = parser.parse_args(argv[1:])
 
-    def add_quiz_args(self, parser):
-        for question in self.quiz.questions:
+    def add_question_args(self, parser):
+        for question in self.questions:
             for option_name, option in question.options.iteritems():
                 option['name'] = option_name
                 add_argument_from_option(parser, question.name, option)
