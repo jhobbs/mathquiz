@@ -8,27 +8,6 @@ from abc import (
     )
 
 
-good_names = [
-    'genius',
-    'whizkid',
-    'smarty pants',
-    'Doctor',
-    'master',
-    'winner',
-    'your awesomeness',
-    ]
-
-bad_names = [
-    'doofus',
-    'cretin',
-    'loser',
-    'half-wit',
-    'meathead',
-    'imbecile',
-    'chump',
-    ]
-
-
 def safe_log10(val):
     """For some reason math.log(10**n, 10) where n % 3 = 0 
     results in a number a little less than the actual log10 value
@@ -108,17 +87,6 @@ class Question(object):
 
     def check_answer(self, answer):
         return str(answer) == str(self.answer)
-
-    def ask(self):
-        print(self.explain())
-        answer = raw_input(self.question_string())
-        if not self.check_answer(answer):
-            print "Wrong, %s! The correct answer is: %s" % (
-                random.choice(bad_names), self.answer)
-            return 0
-        
-        print "Correct, %s!" % (random.choice(good_names))
-        return 1
 
 
 class ComparisonQuestion(Question):
@@ -240,8 +208,8 @@ class MultiplicationQuestion(Question):
     name = "multiplication"
 
     def _generate(self):
-        self.a = random_digit(max_val=9)
-        self.b = random_digit(max_val=9)
+        self.a = random_digit(max_val=self.provided_options.get('max_val'))
+        self.b = random_digit(max_val=self.provided_options.get('max_val'))
         self.answer = self.a * self.b
 
     def explain(self):
@@ -249,6 +217,14 @@ class MultiplicationQuestion(Question):
 
     def question_string(self):
         return "%d * %d = " % (self.a, self.b)
+
+    options = {
+        'max_val': {
+            'help': 'maximum number used in multiplication.',
+            'default': 9,
+            'type': int,
+            }
+    }
 
 
 class SubtractionQuestion(Question):
@@ -274,7 +250,7 @@ class SubtractionQuestion(Question):
     }
 
 
-questions = [
+builtin_question_types = [
     ComparisonQuestion,
     NextMultipleQuestion,
     AdditionQuestion,

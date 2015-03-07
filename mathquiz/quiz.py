@@ -7,7 +7,29 @@ from collections import namedtuple
 
 import boto
 
-from mathquiz.questions import questions as quests
+from mathquiz.questions import builtin_question_types
+
+
+good_names = [
+    'genius',
+    'whizkid',
+    'smarty pants',
+    'Doctor',
+    'master',
+    'winner',
+    'your awesomeness',
+    ]
+
+bad_names = [
+    'doofus',
+    'cretin',
+    'loser',
+    'half-wit',
+    'meathead',
+    'imbecile',
+    'chump',
+    ]
+
 
 UserRecord = namedtuple('UserRecord', [
     'name',
@@ -35,22 +57,30 @@ def add_argument_from_option(parser, module_name, option):
 
 
 class ConsoleQuizRunner(object):
-    def __init__(self, questions):
-        self.questions =questions
+    def __init__(self, question_types):
+        self.question_types = question_types
 
     def run(self, argv):
         self.parse_args(argv)
         if self.args.include is not None:
-            questions = [
-                question for question in self.questions
-                if question.name in self.args.include]
+            question_types = [
+                question_type for question_type
+                in self.question_types
+                if question_type.name in self.args.include]
         else:
-            questions = self.questions
-        quiz = Quiz(questions)
-        results = quiz.run(self.args)
+            question_types = self.question_types
+        quiz = Quiz(question_types)
+        results = self.run_quiz(quiz)
         if self.args.bucket:
             store_quiz_results(args.bucket, args.user, results)
         print_quiz_result(results)
+
+    def run_quiz(self, quiz):
+        num_correct = sum([
+                self.ask_question(question)
+                for question in quiz.questions(self.args)
+            ])
+        return QuizResult(correct=num_correct, total=self.args.num_questions)
 
     def parse_args(self, argv):
         parser = ArgumentParser(description="Enjoy a math quiz.")
@@ -66,33 +96,39 @@ class ConsoleQuizRunner(object):
         self.args = parser.parse_args(argv[1:])
 
     def add_question_args(self, parser):
-        for question in self.questions:
-            for option_name, option in question.options.iteritems():
+        for question_type in self.question_types:
+            for option_name, option in question_type.options.iteritems():
                 option['name'] = option_name
-                add_argument_from_option(parser, question.name, option)
+                add_argument_from_option(parser, question_type.name, option)
+
+    def ask_question(self, question):
+        print(question.explain())
+        answer = raw_input(question.question_string())
+        if not question.check_answer(answer):
+            print "Wrong, %s! The correct answer is: %s" % (
+                random.choice(bad_names), question.answer)
+            return 0
+        print "Correct, %s!" % (random.choice(good_names))
+        return 1
 
 
 class Quiz(object):
-    def __init__(self, questions):
-        self.questions = questions
+    def __init__(self, question_types):
+        self.question_types = question_types
 
-    def run(self, options):
-        num_correct = sum([
-            self.ask(random.choice(self.questions), options)
-            for _ in xrange(options.num_questions)])
+    def questions(self, options):
+        for _ in xrange(options.num_questions):
+            question_type = random.choice(self.question_types)
+            yield self.generate_question(question_type, options)
 
-        return QuizResult(
-            correct=num_correct, total=options.num_questions)
-
-    def ask(self, question, options):
+    def generate_question(self, question, options):
         option_vars = vars(options)
         module_name = "%s_" % (question.name)
         question_options = {
                 arg[len(module_name):]: value
                 for arg,value in option_vars.iteritems()
                 if arg.startswith("%s_" % (question.name))}
-        question = question(question_options)
-        return question.ask()
+        return question(question_options)
 
 
 def store_quiz_results(bucket_name, user, results):
@@ -110,7 +146,7 @@ def store_quiz_results(bucket_name, user, results):
 
 
 def run_quiz(argv):
-    runner = ConsoleQuizRunner(quests)
+    runner = ConsoleQuizRunner(builtin_question_types)
     results = runner.run(argv)
 
 
