@@ -56,7 +56,16 @@ def random_digit(max_val=100000):
         return random.choice([0, 1])
 
     max_exp = int(math.ceil(safe_log10(max_val)))
-    base = random.choice(range(0, max_exp))
+
+    # only pick 0 as an exponent a tenth as often as other exponents.
+    choices = []
+    for i in range(0, max_exp + 1):
+        if i == 0:
+            choices.append(i)
+        else:
+            choices.extend([i] * 10)
+
+    base = random.choice(choices)
 
     if base > 0:
         min_int = 10**(base-1)
@@ -247,7 +256,6 @@ class SubtractionQuestion(Question):
 
     def _generate(self):
         self.a = random_digit(max_val=self.provided_options.get('max_val'))
-        print("a is: %d" % self.a)
         self.b = random_digit(max_val=self.a)
         self.answer = self.a - self.b
 
