@@ -1,4 +1,6 @@
+import math
 import random
+
 from abc import (
     ABCMeta,
     abstractmethod,
@@ -27,11 +29,43 @@ bad_names = [
     ]
 
 
-def random_digit(max_exp=4):
-    base = random.randint(0, max_exp)
-    min_val = 10**base
-    max_val = 10**(base+1)
-    return random.randint(min_val, max_val)
+def safe_log10(val):
+    """For some reason math.log(10**n, 10) where n % 3 = 0 
+    results in a number a little less than the actual log10 value
+    should be. Correct results of that form."""
+
+    raw = math.log(val, 10)
+
+    string = "%d" % val
+    if string.rstrip("0") != "1":
+        return raw
+
+    return math.ceil(raw)
+
+
+def random_digit(max_val=100000):
+    """Returns a random digit less than max_val.
+
+    log10(val) should be uniformly distributed between 0 and
+    ceil(log10(max_val))."""
+
+    if max_val == 0:
+        return 0
+
+    if max_val == 1:
+        return random.choice([0, 1])
+
+    max_exp = int(math.ceil(safe_log10(max_val)))
+    base = random.choice(range(0, max_exp))
+
+    if base > 0:
+        min_int = 10**(base-1)
+    else:
+        min_int = 0
+
+    max_int = min(10**base, max_val)
+
+    return random.randint(min_int, max_int)
 
 
 class Question(object):
@@ -111,8 +145,8 @@ class AdditionQuestion(Question):
     name = "addition"
 
     def _generate(self):
-        self.a = random_digit(max_exp=self.provided_options.get('max_exp'))
-        self.b = random_digit(max_exp=self.provided_options.get('max_exp'))
+        self.a = random_digit(max_val=self.provided_options.get('max_val'))
+        self.b = random_digit(max_val=self.provided_options.get('max_val'))
         self.answer = self.a + self.b
 
     def explain(self):
@@ -122,9 +156,9 @@ class AdditionQuestion(Question):
         return "%d + %d = " % (self.a, self.b)
 
     options = {
-        'max_exp': {
-            'help': 'maximum power of 10 for numbers used in addition.',
-            'default': 4,
+        'max_val': {
+            'help': 'maximum number used in addition.',
+            'default': 100000,
             'type': int,
             }
     }
@@ -197,8 +231,8 @@ class MultiplicationQuestion(Question):
     name = "multiplication"
 
     def _generate(self):
-        self.a = random_digit(max_exp=0)
-        self.b = random_digit(max_exp=0)
+        self.a = random_digit(max_val=9)
+        self.b = random_digit(max_val=9)
         self.answer = self.a * self.b
 
     def explain(self):
@@ -208,10 +242,35 @@ class MultiplicationQuestion(Question):
         return "%d * %d = " % (self.a, self.b)
 
 
+class SubtractionQuestion(Question):
+    name = "subtraction"
+
+    def _generate(self):
+        self.a = random_digit(max_val=self.provided_options.get('max_val'))
+        print("a is: %d" % self.a)
+        self.b = random_digit(max_val=self.a)
+        self.answer = self.a - self.b
+
+    def explain(self):
+        return "Find the difference."
+
+    def question_string(self):
+        return "%d - %d = " % (self.a, self.b)
+
+    options = {
+        'max_val': {
+            'help': 'maximum number used in subtraction.',
+            'default': 100000,
+            'type': int,
+            }
+    }
+
+
 questions = [
     ComparisonQuestion,
     NextMultipleQuestion,
     AdditionQuestion,
     CountByQuestion,
     MultiplicationQuestion,
+    SubtractionQuestion,
     ]
