@@ -8,20 +8,6 @@ from abc import (
     )
 
 
-def safe_log10(val):
-    """For some reason math.log(10**n, 10) where n % 3 = 0 
-    results in a number a little less than the actual log10 value
-    should be. Correct results of that form."""
-
-    raw = math.log(val, 10)
-
-    string = "%d" % val
-    if string.rstrip("0") != "1":
-        return raw
-
-    return math.ceil(raw)
-
-
 def random_digit(max_val=100000):
     """Returns a random digit less than max_val.
 
@@ -34,7 +20,7 @@ def random_digit(max_val=100000):
     if max_val == 1:
         return random.choice([0, 1])
 
-    max_exp = int(math.ceil(safe_log10(max_val)))
+    max_exp = int(math.ceil(math.log10(max_val)))
 
     # only pick 0 as an exponent a tenth as often as other exponents.
     choices = []
