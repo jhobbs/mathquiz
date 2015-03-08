@@ -160,12 +160,6 @@ class NextMultipleQuestion(Question):
             self.factor,
             self.direction,
             self.number)
-    
-    def check_answer(self, answer):
-        try:
-            return self.answer == int(answer)
-        except ValueError:
-            return False
 
 
 class CountByQuestion(Question):
@@ -236,6 +230,24 @@ class SubtractionQuestion(Question):
     }
 
 
+class RoundingQuestion(Question):
+    name = "rounding"
+
+    def _generate(self):
+        self.number = random_digit()
+        self.round_to = random.choice(range(-4, -1))
+        self.answer = int(round(self.number, self.round_to))
+
+    def explain(self):
+        return "Round the number to the given precision."
+
+    def question_string(self):
+        return "Round %d to the nearest %d: " % (
+            self.number,
+            10**(self.round_to * -1),
+            )
+
+
 builtin_question_types = [
     ComparisonQuestion,
     NextMultipleQuestion,
@@ -243,4 +255,5 @@ builtin_question_types = [
     CountByQuestion,
     MultiplicationQuestion,
     SubtractionQuestion,
+    RoundingQuestion,
     ]
