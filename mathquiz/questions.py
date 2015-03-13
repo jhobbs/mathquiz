@@ -8,11 +8,22 @@ from abc import (
     )
 
 
-def random_digit(max_val=100000):
+def random_digit(min_val=0, max_val=100000):
     """Returns a random digit less than max_val.
 
     log10(val) should be uniformly distributed between 0 and
     ceil(log10(max_val))."""
+
+    if max_val < min_val:
+        raise ValueError(
+            "max (%d) is less than min (%d)" % (max_val, min_val))
+
+    if min_val < 0:
+        raise ValueError(
+            "negative values not supported.")
+
+    if min_val == max_val:
+        return min_val
 
     if max_val == 0:
         return 0
@@ -20,11 +31,15 @@ def random_digit(max_val=100000):
     if max_val == 1:
         return random.choice([0, 1])
 
+    if min_val == 0:
+        min_exp = 0
+    else:
+        min_exp = int(math.ceil(math.log10(min_val)))
     max_exp = int(math.ceil(math.log10(max_val)))
 
     # only pick 0 as an exponent a tenth as often as other exponents.
     choices = []
-    for i in range(0, max_exp + 1):
+    for i in range(min_exp, max_exp + 1):
         if i == 0:
             choices.append(i)
         else:
@@ -33,9 +48,9 @@ def random_digit(max_val=100000):
     base = random.choice(choices)
 
     if base > 0:
-        min_int = 10**(base-1)
+        min_int = max(min_val, 10**(base-1))
     else:
-        min_int = 0
+        min_int = min_val
 
     max_int = min(10**base, max_val)
 
@@ -248,6 +263,32 @@ class RoundingQuestion(Question):
             )
 
 
+class DivisionQuestion(Question):
+    name = "division"
+
+    def _generate(self):
+        self.divisor = random_digit(min_val=1, max_val=self.provided_options.get('max_val'))
+        self.answer = random_digit(max_val=self.provided_options.get('max_val'))
+        self.dividend = self.divisor * self.answer
+
+    def explain(self):
+        return "Divide one number by the other"
+
+    def question_string(self):
+        return "%d %% %d = " % (
+            self.dividend,
+            self.divisor
+            )
+
+    options = {
+        'max_val': {
+            'help': 'maximum number used in division',
+            'default': 12,
+            'type': int,
+            }
+    }
+
+
 builtin_question_types = [
     ComparisonQuestion,
     NextMultipleQuestion,
@@ -256,4 +297,5 @@ builtin_question_types = [
     MultiplicationQuestion,
     SubtractionQuestion,
     RoundingQuestion,
+    DivisionQuestion,
     ]
