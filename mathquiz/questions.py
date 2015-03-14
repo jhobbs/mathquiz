@@ -12,10 +12,53 @@ from mathquiz.math_helpers import (
     )
 
 
+def setup_builtin_options(builtin_options, attrs):
+    for option, option_config in builtin_options.iteritems():
+        if not option in attrs:
+            continue
+
+        value = attrs[option]
+        if 'options' not in attrs:
+            attrs['options'] = dict()
+
+        attrs['options'][option] = {
+            'help': option_config['help'],
+            'type': option_config['type'],
+            'default': option_config['type'](value),
+        }
+
+
+class QuestionMeta(ABCMeta):
+
+    def __new__(cls, name, bases, attrs):
+        print("Setting up: %s" % (name))
+
+        for base in bases:
+            if hasattr(base, 'builtin_options'):
+                print('setting up options')
+                setup_builtin_options(base.builtin_options, attrs)
+            else:
+                print(base)
+
+        new_class = super(
+            QuestionMeta, cls).__new__(cls, name, bases, attrs)
+
+        print new_class.options
+
+        return new_class
+
+
 class Question(object):
-    __metaclass__ = ABCMeta
+    __metaclass__ = QuestionMeta
 
     options = dict()
+
+    builtin_options = {
+        'max_val': {
+            'help': "Maximum value for operation",
+            'type': int,
+        }
+    }
 
     def __init__(self, options):
         self.provided_options = options
@@ -76,6 +119,7 @@ class ComparisonQuestion(Question):
 
 class AdditionQuestion(Question):
     name = "addition"
+    max_val = 100000
 
     def _generate(self):
         self.a = random_digit(max_val=self.provided_options.get('max_val'))
@@ -87,14 +131,6 @@ class AdditionQuestion(Question):
 
     def question_string(self):
         return "%d + %d = " % (self.a, self.b)
-
-    options = {
-        'max_val': {
-            'help': 'maximum number used in addition.',
-            'default': 100000,
-            'type': int,
-            }
-    }
 
 
 class NextMultipleQuestion(Question):
@@ -141,6 +177,7 @@ class CountByQuestion(Question):
 
 class MultiplicationQuestion(Question):
     name = "multiplication"
+    max_val = 9
 
     def _generate(self):
         self.a = random_digit(max_val=self.provided_options.get('max_val'))
@@ -153,17 +190,10 @@ class MultiplicationQuestion(Question):
     def question_string(self):
         return "%d * %d = " % (self.a, self.b)
 
-    options = {
-        'max_val': {
-            'help': 'maximum number used in multiplication.',
-            'default': 9,
-            'type': int,
-            }
-    }
-
 
 class SubtractionQuestion(Question):
     name = "subtraction"
+    max_val = 100000
 
     def _generate(self):
         self.a = random_digit(max_val=self.provided_options.get('max_val'))
@@ -175,14 +205,6 @@ class SubtractionQuestion(Question):
 
     def question_string(self):
         return "%d - %d = " % (self.a, self.b)
-
-    options = {
-        'max_val': {
-            'help': 'maximum number used in subtraction.',
-            'default': 100000,
-            'type': int,
-            }
-    }
 
 
 class RoundingQuestion(Question):
@@ -205,6 +227,7 @@ class RoundingQuestion(Question):
 
 class DivisionQuestion(Question):
     name = "division"
+    max_val = 12
 
     def _generate(self):
         self.divisor = random_digit(min_val=1, max_val=self.provided_options.get('max_val'))
@@ -219,14 +242,6 @@ class DivisionQuestion(Question):
             self.dividend,
             self.divisor
             )
-
-    options = {
-        'max_val': {
-            'help': 'maximum number used in division',
-            'default': 12,
-            'type': int,
-            }
-    }
 
 
 builtin_question_types = [
