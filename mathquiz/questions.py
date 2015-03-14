@@ -14,10 +14,11 @@ from mathquiz.math_helpers import (
 
 def setup_builtin_options(builtin_options, attrs):
     for option, option_config in builtin_options.iteritems():
-        if not option in attrs:
+        if option not in attrs:
             continue
 
         value = attrs[option]
+
         if 'options' not in attrs:
             attrs['options'] = dict()
 
@@ -81,7 +82,7 @@ class Question(object):
         return str(answer) == str(self.answer)
 
 
-class ComparisonQuestion(Question):
+class Comparison(Question):
     name = "comparison"
 
     """Compare two integers using <, > and =."""
@@ -110,7 +111,7 @@ class ComparisonQuestion(Question):
         return "%d _ %d  " % (self.a, self.b)
 
 
-class AdditionQuestion(Question):
+class Addition(Question):
     name = "addition"
     max_val = 100000
 
@@ -126,7 +127,7 @@ class AdditionQuestion(Question):
         return "%d + %d = " % (self.a, self.b)
 
 
-class NextMultipleQuestion(Question):
+class NextMultiple(Question):
     name = "next-multiple"
 
     def _generate(self):
@@ -146,7 +147,7 @@ class NextMultipleQuestion(Question):
             self.number)
 
 
-class CountByQuestion(Question):
+class CountBy(Question):
     name = "count-by"
 
     """Count by an integer"""
@@ -168,7 +169,7 @@ class CountByQuestion(Question):
             self.count_by, self.offset, self.answer_list[-1])
 
 
-class MultiplicationQuestion(Question):
+class Multiplication(Question):
     name = "multiplication"
     max_val = 9
 
@@ -184,7 +185,7 @@ class MultiplicationQuestion(Question):
         return "%d * %d = " % (self.a, self.b)
 
 
-class SubtractionQuestion(Question):
+class Subtraction(Question):
     name = "subtraction"
     max_val = 100000
 
@@ -200,7 +201,7 @@ class SubtractionQuestion(Question):
         return "%d - %d = " % (self.a, self.b)
 
 
-class RoundingQuestion(Question):
+class Rounding(Question):
     name = "rounding"
 
     def _generate(self):
@@ -218,7 +219,7 @@ class RoundingQuestion(Question):
             )
 
 
-class DivisionQuestion(Question):
+class Division(Question):
     name = "division"
     max_val = 12
 
@@ -238,12 +239,12 @@ class DivisionQuestion(Question):
 
 
 builtin_question_types = [
-    ComparisonQuestion,
-    NextMultipleQuestion,
-    AdditionQuestion,
-    CountByQuestion,
-    MultiplicationQuestion,
-    SubtractionQuestion,
-    RoundingQuestion,
-    DivisionQuestion,
+    Comparison,
+    NextMultiple,
+    Addition,
+    CountBy,
+    Multiplication,
+    Subtraction,
+    Rounding,
+    Division,
     ]
