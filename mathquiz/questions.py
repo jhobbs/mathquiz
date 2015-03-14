@@ -31,19 +31,12 @@ def setup_builtin_options(builtin_options, attrs):
 class QuestionMeta(ABCMeta):
 
     def __new__(cls, name, bases, attrs):
-        print("Setting up: %s" % (name))
-
         for base in bases:
             if hasattr(base, 'builtin_options'):
-                print('setting up options')
                 setup_builtin_options(base.builtin_options, attrs)
-            else:
-                print(base)
 
         new_class = super(
             QuestionMeta, cls).__new__(cls, name, bases, attrs)
-
-        print new_class.options
 
         return new_class
 
