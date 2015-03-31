@@ -2,9 +2,9 @@ from argparse import ArgumentParser
 from mathquiz.questions import builtin_question_types
 from mathquiz.quizrunner import ConsoleQuizRunner
 
+
 def display_stats(args):
     user = args.user
-
     print("Stats for %s:" % user)
 
 
