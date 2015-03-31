@@ -5,9 +5,8 @@ import yaml
 from argparse import ArgumentParser
 from collections import namedtuple
 
-import boto
-
 from mathquiz.questions import builtin_question_types
+from mathquiz.storage import store_quiz_results_local
 
 
 good_names = [
@@ -30,11 +29,6 @@ bad_names = [
     'chump',
     ]
 
-
-UserRecord = namedtuple('UserRecord', [
-    'name',
-    'results',
-    ])
 
 QuizResult = namedtuple('QuizResult', [
     'correct',
@@ -71,8 +65,8 @@ class ConsoleQuizRunner(object):
             question_types = self.question_types
         quiz = Quiz(question_types)
         results = self.run_quiz(quiz)
-        if self.args.bucket:
-            store_quiz_results(args.bucket, args.user, results)
+        store_quiz_results_local(self.args.user, results)
+
         print_quiz_result(results)
 
     def run_quiz(self, quiz):
@@ -86,8 +80,6 @@ class ConsoleQuizRunner(object):
         parser = ArgumentParser(description="Enjoy a math quiz.")
         parser.add_argument("-n", "--num_questions",
             help="Number of questions in the quiz.", default=10, type=int)
-        parser.add_argument("-b", "--bucket",
-            help="Name of S3 bucket.", default=os.environ.get('MATHQUIZ_BUCKET'))
         parser.add_argument("-i", "--include",
             nargs="+",
             help="questions to include. by default, all are included, but if this is specified only those specified are included.")
@@ -129,20 +121,6 @@ class Quiz(object):
                 for arg,value in option_vars.iteritems()
                 if arg.startswith("%s_" % (question.name))}
         return question(question_options)
-
-
-def store_quiz_results(bucket_name, user, results):
-    c = boto.connect_s3()
-    bucket = c.get_bucket(bucket_name)
-    key = bucket.get_key('%s-results' % (user))
-    if key is None:
-        key = bucket.new_key('%s-results' % (user))
-        contents = []
-    else:
-        contents = yaml.load(key.get_contents_as_string())
-
-    contents.append(results)
-    key.set_contents_from_string(yaml.dump(contents))
 
 
 def run_quiz(argv):
