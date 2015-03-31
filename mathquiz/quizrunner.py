@@ -98,8 +98,8 @@ class ConsoleQuizRunner(object):
         parser.add_argument("-i", "--include",
             nargs="+",
             help="questions to include. by default, all are included, but if this is specified only those specified are included.")
+        parser.set_defaults(func=self.run)
         self.add_question_args(parser)
-        parser.add_argument("user", help="Name of user.")
 
     def add_question_args(self, parser):
         for question_type in self.question_types:
