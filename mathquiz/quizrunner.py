@@ -29,15 +29,32 @@ bad_names = [
     ]
 
 
-QuizResult = namedtuple('QuizResult', [
-    'correct',
-    'total',
-    ])
+class QuestionResult(object):
+    def __init__(self, question, answer, result):
+        self.question = question
+        self.answer = answer
+        self.result = result
+
+
+class QuizResult(object):
+    def __init__(self, results=None):
+        if results is None:
+            self.results = []
+        else:
+            self.results = results
+
+    @property
+    def num_questions(self):
+        return len(self.results)
+
+    @property
+    def num_correct(self):
+        return sum([result.result for result in self.results])
 
 
 def print_quiz_result(quiz_result): 
     print("You got %d out of %d questions right!" % (
-        quiz_result.correct, quiz_result.total))
+        quiz_result.num_correct, quiz_result.num_questions))
 
 
 def add_argument_from_option(parser, module_name, option):
@@ -65,15 +82,17 @@ class ConsoleQuizRunner(object):
         quiz = Quiz(question_types)
         results = self.run_quiz(quiz)
         store_quiz_results_local(self.args.user, results)
-
         print_quiz_result(results)
 
     def run_quiz(self, quiz):
-        num_correct = sum([
-                self.ask_question(question)
-                for question in quiz.questions(self.args)
-            ])
-        return QuizResult(correct=num_correct, total=self.args.num_questions)
+
+        results = []
+        for question in quiz.questions(self.args):
+            answer, result = self.ask_question(question)
+            results.append(QuestionResult(question, answer, result))
+
+
+        return QuizResult(results)
 
     def parse_args(self, argv):
         parser = ArgumentParser(description="Enjoy a math quiz.")
@@ -98,14 +117,14 @@ class ConsoleQuizRunner(object):
         if not question.check_answer(answer):
             print "Wrong, %s! The correct answer is: %s" % (
                 random.choice(bad_names), question.answer)
-            return 0
+            return answer, 0
         print "Correct, %s!" % (random.choice(good_names))
-        return 1
+        return answer, 1
 
 
 def run_quiz(argv):
     runner = ConsoleQuizRunner(builtin_question_types)
-    results = runner.run(argv)
+    runner.run(argv)
 
 
 def main(argv):

@@ -56,7 +56,7 @@ class Question(object):
 
     def __init__(self, options):
         self.provided_options = options
-        self.question = self._generate()
+        self._generate()
 
     @abstractproperty
     def name(self):
