@@ -17,6 +17,11 @@ def display_stats(args):
     questions = []
     for quiz in user_data['results']:
         questions.extend(quiz.results)
+
+    if len(questions) == 0:
+        print("No questions answered yet.")
+        return
+
     correct_questions = [
         question for question in questions
         if question.result]
