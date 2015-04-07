@@ -1,6 +1,7 @@
 from collections import defaultdict
 from mathquiz.storage import get_current_user_data
 
+
 def group_by_type(question_results):
     grouped = defaultdict(list)
     for question_result in question_results:

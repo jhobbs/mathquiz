@@ -1,6 +1,7 @@
 import math
 import random
 
+
 def random_digit(min_val=0, max_val=100000):
     """Returns a random digit less than max_val.
 
@@ -63,5 +64,3 @@ def find_next_multiple(number, factor, direction):
         return ((number / factor) + 1) * factor
     else:
         raise Exception('Bad direction: %s' % direction)
-
-

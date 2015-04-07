@@ -97,7 +97,7 @@ class Comparison(Question):
         self.b = random_digit()
         while self.b == self.a:
             self.b = random_digit()
-        
+
         if self.a > self.b:
             self.answer = '>'
             return
@@ -132,7 +132,7 @@ class NextMultiple(Question):
 
     def _generate(self):
         self.number = random_digit()
-        self.factor = random.choice([10,100,10000])
+        self.factor = random.choice([10, 100, 10000])
         self.direction = random.choice(['up', 'down'])
         self.answer = find_next_multiple(
             self.number, self.factor, self.direction)
@@ -152,12 +152,12 @@ class CountBy(Question):
 
     """Count by an integer"""
     def _generate(self):
-        self.offset = random.randint(0,9)
-        self.count_by = random.randint(0,9)
-        iterations = random.randint(1,9)
+        self.offset = random.randint(0, 9)
+        self.count_by = random.randint(0, 9)
+        iterations = random.randint(1, 9)
         self.answer_list = [
             "%d" % (self.offset + self.count_by * i)
-            for i in range(0,iterations)]
+            for i in range(0, iterations)]
         self.answer = " ".join(self.answer_list)
 
     def explain(self):
@@ -224,8 +224,10 @@ class Division(Question):
     max_val = 12
 
     def _generate(self):
-        self.divisor = random_digit(min_val=1, max_val=self.provided_options.get('max_val'))
-        self.answer = random_digit(max_val=self.provided_options.get('max_val'))
+        self.divisor = random_digit(
+            min_val=1, max_val=self.provided_options.get('max_val'))
+        self.answer = random_digit(
+            max_val=self.provided_options.get('max_val'))
         self.dividend = self.divisor * self.answer
 
     def explain(self):

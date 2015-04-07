@@ -1,8 +1,5 @@
 import random
 
-from argparse import ArgumentParser
-from collections import namedtuple
-
 from mathquiz.quiz import Quiz
 from mathquiz.storage import store_quiz_results_local
 
@@ -51,7 +48,7 @@ class QuizResult(object):
         return sum([result.result for result in self.results])
 
 
-def print_quiz_result(quiz_result): 
+def print_quiz_result(quiz_result):
     print("You got %d out of %d questions right!" % (
         quiz_result.num_correct, quiz_result.num_questions))
 
@@ -87,17 +84,16 @@ class ConsoleQuizRunner(object):
         for question in quiz.questions(args):
             answer, result = self.ask_question(question)
             results.append(QuestionResult(question, answer, result))
-
-
         return QuizResult(results)
 
     def setup_parser(self, parser):
-        parser.help="Enjoy a math quiz."
-        parser.add_argument("-n", "--num_questions",
+        parser.help = "Enjoy a math quiz."
+        parser.add_argument(
+            "-n", "--num_questions",
             help="Number of questions in the quiz.", default=10, type=int)
-        parser.add_argument("-i", "--include",
-            nargs="+",
-            help="questions to include. by default, all are included, but if this is specified only those specified are included.")
+        parser.add_argument(
+            "-i", "--include", nargs="+",
+            help="questions to include. by default, all are included.")
         parser.set_defaults(func=self.run)
         self.add_question_args(parser)
 

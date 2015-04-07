@@ -7,8 +7,8 @@ from mathquiz.stats import setup_parser as setup_stats_parser
 def get_args(argv, runner):
     parser = ArgumentParser()
     parser.add_argument(
-            "-u", "--user",
-            default="default", help="Name of user.")
+        "-u", "--user",
+        default="default", help="Name of user.")
     subparsers = parser.add_subparsers()
     runner.setup_parser(subparsers.add_parser('run'))
     setup_stats_parser(subparsers.add_parser('stats'))

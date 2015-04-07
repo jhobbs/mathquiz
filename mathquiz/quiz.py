@@ -1,5 +1,6 @@
 import random
 
+
 class Quiz(object):
     def __init__(self, question_types):
         self.question_types = question_types
@@ -13,7 +14,7 @@ class Quiz(object):
         option_vars = vars(options)
         module_name = "%s_" % (question.name)
         question_options = {
-                arg[len(module_name):]: value
-                for arg,value in option_vars.iteritems()
-                if arg.startswith("%s_" % (question.name))}
+            arg[len(module_name):]: value
+            for arg, value in option_vars.iteritems()
+            if arg.startswith("%s_" % (question.name))}
         return question(question_options)

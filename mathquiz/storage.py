@@ -31,11 +31,9 @@ def get_default_user_data():
 
 def get_current_user_data(user):
     user_yaml_path = get_user_yaml_path(user)
-    
     if os.path.exists(user_yaml_path):
         contents = open(user_yaml_path, "r").read()
         return yaml.load(contents)
-    
     return get_default_user_data()
 
 
