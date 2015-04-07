@@ -1,0 +1,48 @@
+
+Quiz Level Dynamic Selection
+---------------------------------------------------------------------
+The goal for mathquiz is to keep quizes interesting by providing
+challenging questions matched to the user's ability.
+
+That means there shouldn't be too many easy questions: If a user gets
+a certain type of question right nearly all the time, don't ask it as
+often as others.
+
+That means questions that are hard for the user should be asked more
+often: If a user misses a certain type of question more often than
+others, it should be asked more often than others.
+
+However, all available question types should come up in quizes often
+enough that if the user starts regressing in a type of question it
+will get picked on. Hopefully this refreshing will keep users from
+regressing on question types in the first place.
+
+In order to be able to pick questions based on the user's history, the
+quiz needs access to the user's history. So, when a new quiz is created,
+we'll provide the user's history as a parameter to the new quiz object.
+
+Question Level Dynamic Selection
+----------------------------------------------------------------------
+Just going by question type isn't the best that can be done. Within
+question types, there can be a lot of variation. For example, 1+2 is
+a easier than 1231 + 4314, and counting by 2s is easier than counting
+by 9s.
+
+Eventually question types should have their own way of scoring the
+difficulty of their questions. It could be one dimension, or it could
+be more than one. For example, count-by questions could have the
+dimensions:
+ - amount to count by
+ - number of iterations to count
+
+And addition might have just the dimension:
+ - number of digits in operands
+
+Or addition could eventually include:
+ - operand type: fractional, decimal, whole, negative, complex..
+ - operand type mixing: mix fractional and decimal, etc.
+
+Users may be good at one of those dimensions but not the other, and
+when generating questions, the quiz should be able to adjust the
+dimensions individually in order to come up with appropriately
+difficult questions.
