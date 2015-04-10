@@ -6,9 +6,13 @@ class Quiz(object):
         self.question_types = question_types
         self.user_data = user_data
 
+    def pick_next_question_type(self):
+        question_type = random.choice(self.question_types)
+        return question_type
+
     def questions(self, options):
         for _ in xrange(options.num_questions):
-            question_type = random.choice(self.question_types)
+            question_type = self.pick_next_question_type()
             yield self.generate_question(question_type, options)
 
     def generate_question(self, question, options):
