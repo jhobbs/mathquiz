@@ -2,8 +2,9 @@ import random
 
 
 class Quiz(object):
-    def __init__(self, question_types):
+    def __init__(self, question_types, user_data):
         self.question_types = question_types
+        self.user_data = user_data
 
     def questions(self, options):
         for _ in xrange(options.num_questions):

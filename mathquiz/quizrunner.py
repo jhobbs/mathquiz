@@ -1,7 +1,10 @@
 import random
 
 from mathquiz.quiz import Quiz
-from mathquiz.storage import store_quiz_results_local
+from mathquiz.storage import (
+    get_current_user_data,
+    store_quiz_results_local,
+    )
 
 
 good_names = [
@@ -67,6 +70,7 @@ class ConsoleQuizRunner(object):
         self.question_types = question_types
 
     def run(self, args):
+        user_data = get_current_user_data(args.user)
         if args.include is not None:
             question_types = [
                 question_type for question_type
@@ -74,7 +78,7 @@ class ConsoleQuizRunner(object):
                 if question_type.name in args.include]
         else:
             question_types = self.question_types
-        quiz = Quiz(question_types)
+        quiz = Quiz(question_types, user_data)
         results = self.run_quiz(quiz, args)
         store_quiz_results_local(args.user, results)
         print_quiz_result(results)
