@@ -1,4 +1,5 @@
 from collections import defaultdict
+from mathquiz.questions import builtin_question_types
 from mathquiz.storage import get_current_user_data
 
 MASTERY_SIZE = 30
@@ -79,10 +80,16 @@ def display_stats(args):
     print("Correctly answered questions: %d" % len(correct_questions))
     print("Overall success rate: %d%%" % (
         int(float(len(correct_questions))/len(questions) * 100)))
-    failures_grouped_by_type = group_by_type(incorrect_questions)
-    print("Number of incorrect answers for each question type: ")
-    for failure_type, failures in failures_grouped_by_type.iteritems():
-        print("%s: %d failures" % (failure_type, len(failures)))
+    by_mastery = group_by_mastery(builtin_question_types, questions)
+
+    for mastery, question_types in by_mastery.iteritems():
+        strings = [unicode(question_type) for question_type in question_types]
+        if len(strings) == 0:
+            display = "None"
+        else:
+            display = " ".join(strings)
+
+        print("%s: %s" % (mastery, display))
 
 
 def setup_parser(parser):

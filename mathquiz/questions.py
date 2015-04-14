@@ -41,6 +41,9 @@ class QuestionMeta(ABCMeta):
 
         return new_class
 
+    def __str__(self):
+        return self.name
+
 
 class Question(object):
     __metaclass__ = QuestionMeta
