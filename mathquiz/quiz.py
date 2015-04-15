@@ -14,7 +14,6 @@ class Quiz(object):
         self.question_types = question_types
         self.user_data = user_data
         self.weighted_question_types = self.get_weighted_question_types()
-        print self.weighted_question_types
 
     def get_weighted_question_types(self):
         question_history = questions_from_user_data(self.user_data)

@@ -16,7 +16,7 @@ def question_type_mastered(question_type, question_type_history):
     if len(question_type_history) < MASTERY_SIZE:
         return False
 
-    relevant_history = question_type_history[:-MASTERY_SIZE]
+    relevant_history = question_type_history[-MASTERY_SIZE:]
     correct_questions, _ = group_by_correctness(relevant_history)
 
     return len(correct_questions)/float(MASTERY_SIZE) >= MASTERY_PERCENT
@@ -32,7 +32,7 @@ def group_by_mastery(question_types, question_history):
     unmastered_question_types = set()
     questions_by_type = group_by_type(question_history)
     for question_type in question_types:
-        question_type_history = questions_by_type[question_type]
+        question_type_history = questions_by_type[question_type.name]
         if question_type_mastered(question_type, question_type_history):
             mastered_question_types.add(question_type)
         else:
