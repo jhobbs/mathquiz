@@ -1,4 +1,5 @@
 import random
+import subprocess
 
 from mathquiz.quiz import Quiz
 from mathquiz.storage import (
@@ -107,12 +108,16 @@ class ConsoleQuizRunner(object):
                 option['name'] = option_name
                 add_argument_from_option(parser, question_type.name, option)
 
+    def report(self, text):
+        print(text)
+        subprocess.check_call(['espeak', text])
+
     def ask_question(self, question):
         print(question.explain())
         answer = raw_input(question.question_string())
         if not question.check_answer(answer):
-            print "Wrong, %s! The correct answer is: %s" % (
-                random.choice(bad_names), question.answer)
+            self.report("Wrong, %s! The correct answer is: %s" % (
+                random.choice(bad_names), question.answer))
             return answer, 0
-        print "Correct, %s!" % (random.choice(good_names))
+        self.report("Correct, %s!" % (random.choice(good_names)))
         return answer, 1
