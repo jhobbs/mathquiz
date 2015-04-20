@@ -134,7 +134,7 @@ class NextMultiple(Question):
     name = "next-multiple"
 
     def _generate(self):
-        self.number = random_digit()
+        self.number = random_digit(min_val=1)
         self.factor = random.choice([10, 100, 10000])
         self.direction = random.choice(['up', 'down'])
         self.answer = find_next_multiple(
