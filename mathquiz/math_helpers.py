@@ -1,6 +1,8 @@
 import math
 import random
 
+from fractions import Fraction
+
 
 def random_digit(min_val=0, max_val=100000):
     """Returns a random digit less than max_val.
@@ -49,6 +51,12 @@ def random_digit(min_val=0, max_val=100000):
     max_int = min(10**base, max_val)
 
     return random.randint(min_int, max_int)
+
+
+def random_fraction(max_val=12):
+    numerator = random_digit(max_val=max_val)
+    denominator = random_digit(min_val=1, max_val=max_val)
+    return Fraction(numerator, denominator)
 
 
 def find_next_multiple(number, factor, direction):

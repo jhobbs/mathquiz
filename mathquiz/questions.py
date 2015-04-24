@@ -9,6 +9,7 @@ from abc import (
 from mathquiz.math_helpers import (
     find_next_multiple,
     random_digit,
+    random_fraction,
     )
 
 
@@ -85,21 +86,23 @@ class Question(object):
         return str(answer) == str(self.answer)
 
 
-class Comparison(Question):
-    name = "comparison"
+class BaseComparison(Question):
+    """Compare two values using <, > and =."""
 
-    """Compare two integers using <, > and =."""
+    def _generator(self):
+        return self.generator.__func__()
+
     def _generate(self):
-        self.a = random_digit()
+        self.a = self._generator()
 
         if random.randint(0, 4) == 0:
             self.b = self.a
             self.answer = '='
             return
 
-        self.b = random_digit()
+        self.b = self._generator()
         while self.b == self.a:
-            self.b = random_digit()
+            self.b = self._generator()
 
         if self.a > self.b:
             self.answer = '>'
@@ -111,7 +114,17 @@ class Comparison(Question):
         return "Fill in the blank with '<', '>' or ="
 
     def question_string(self):
-        return "%d _ %d  " % (self.a, self.b)
+        return "%s _ %s  " % (self.a, self.b)
+
+
+class IntegerComparison(BaseComparison):
+    name = "integer-comparison"
+    generator = random_digit
+
+
+class FractionComparison(BaseComparison):
+    name = "fraction-comparison"
+    generator = random_fraction
 
 
 class Addition(Question):
@@ -244,7 +257,8 @@ class Division(Question):
 
 
 builtin_question_types = [
-    Comparison,
+    IntegerComparison,
+    FractionComparison,
     NextMultiple,
     Addition,
     CountBy,

@@ -23,7 +23,7 @@ class Quiz(object):
         for question_type in question_types_by_mastery['mastered']:
             weighted_questions.append(question_type)
         for question_type in question_types_by_mastery['unmastered']:
-            weighted_questions.extend([question_type] * UNMASTERED_BOOST) 
+            weighted_questions.extend([question_type] * UNMASTERED_BOOST)
         return weighted_questions
 
     def pick_next_question_type(self):
