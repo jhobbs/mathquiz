@@ -5,6 +5,7 @@ from mathquiz.storage import get_current_user_data
 MASTERY_SIZE = 30
 MASTERY_PERCENT = 0.90
 
+
 def questions_from_user_data(user_data):
     questions = []
     for quiz in user_data['results']:
@@ -90,6 +91,21 @@ def display_stats(args):
             display = " ".join(strings)
 
         print("%s: %s" % (mastery, display))
+
+    print("History for the last %d questions of each type:" % MASTERY_SIZE)
+    for question_type in builtin_question_types:
+        questions_of_type = filter(
+            lambda x: x.question.name == question_type.name, questions)
+        relevant_questions = questions_of_type[-MASTERY_SIZE:]
+
+        if len(relevant_questions) == 0:
+            print("%s: no answers." % question_type.name)
+            continue
+
+        correct_of_type, _ = group_by_correctness(
+            relevant_questions)
+        print("%s: %d/%d" % (
+            question_type.name, len(correct_of_type), len(relevant_questions)))
 
 
 def setup_parser(parser):
