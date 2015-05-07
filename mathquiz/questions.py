@@ -1,4 +1,5 @@
 import random
+from fractions import Fraction
 
 from abc import (
     ABCMeta,
@@ -185,21 +186,37 @@ class CountBy(Question):
             self.count_by, self.offset, self.answer_list[-1])
 
 
-class Multiplication(Question):
-    name = "multiplication"
-    max_val = 9
+class BaseMultiplication(Question):
+
+    def _generator(self, *args, **kwargs):
+        return self.generator.__func__(*args, **kwargs)
 
     def _generate(self):
-        self.a = random_digit(max_val=self.provided_options.get('max_val'))
-        self.b = random_digit(max_val=self.provided_options.get('max_val'))
+        max_val = self.provided_options.get('max_val')
+        self.a = self._generator(max_val=self.provided_options.get('max_val'))
+        self.b = self._generator(max_val=self.provided_options.get('max_val'))
         self.answer = self.a * self.b
 
     def explain(self):
         return "Multiply the two numbers."
 
     def question_string(self):
-        return "%d * %d = " % (self.a, self.b)
+        return "%s * %s = " % (self.a, self.b)
 
+
+class IntegerMultiplication(BaseMultiplication):
+    name = "integer_multiplication"
+    generator = random_digit
+    max_val = 9
+
+
+class FractionMultiplication(BaseMultiplication):
+    name = "fraction_multiplication"
+    generator = random_fraction
+    max_val = 9
+
+    def check_answer(self, answer):
+        return self.answer == Fraction(answer)
 
 class Subtraction(Question):
     name = "subtraction"
@@ -262,7 +279,8 @@ builtin_question_types = [
     NextMultiple,
     Addition,
     CountBy,
-    Multiplication,
+    IntegerMultiplication,
+    FractionMultiplication,
     Subtraction,
     Rounding,
     Division,
