@@ -275,7 +275,7 @@ class Division(Question):
 
 builtin_question_types = [
     IntegerComparison,
-    FractionComparison,
+    #FractionComparison,
     NextMultiple,
     Addition,
     CountBy,
