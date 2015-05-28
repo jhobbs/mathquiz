@@ -90,6 +90,8 @@ class Question(object):
 class BaseComparison(Question):
     """Compare two values using <, > and =."""
 
+    name = "base-comparison"
+
     def _generator(self):
         return self.generator.__func__()
 
@@ -126,6 +128,22 @@ class IntegerComparison(BaseComparison):
 class FractionComparison(BaseComparison):
     name = "fraction-comparison"
     generator = random_fraction
+
+
+class Exponent(Question):
+    name = "exponent"
+    max_val = 9
+
+    def _generate(self):
+        self.a = random_digit(max_val=self.provided_options.get('max_val'))
+        self.b = random_digit(max_val=self.provided_options.get('max_val'))
+        self.answer = self.a ** self.b
+
+    def explain(self):
+        return "Multiple a number by itself the given times"
+
+    def question_string(self):
+        return "%d**%d = " % (self.a, self.b)
 
 
 class Addition(Question):
@@ -308,4 +326,5 @@ builtin_question_types = [
     Rounding,
     Division,
     Modulo,
+    Exponent
     ]
