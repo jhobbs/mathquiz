@@ -86,9 +86,17 @@ class ConsoleQuizRunner(object):
 
     def run_quiz(self, quiz, args):
         results = []
-        for question in quiz.questions(args):
-            answer, result = self.ask_question(question)
-            results.append(QuestionResult(question, answer, result))
+        questions_left = args.num_questions
+        while questions_left > 0:
+            for question in quiz.questions(questions_left, args):
+                answer, result = self.ask_question(question)
+                results.append(QuestionResult(question, answer, result))
+                if result == 0:
+                    print("Adding two more questions for incorrect answer!")
+                    questions_left += 1
+                else:
+                    questions_left -= 1
+                print("Only %d questions left!" % (questions_left))
         return QuizResult(results)
 
     def setup_parser(self, parser):

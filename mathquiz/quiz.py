@@ -30,8 +30,8 @@ class Quiz(object):
         question_type = random.choice(self.weighted_question_types)
         return question_type
 
-    def questions(self, options):
-        for _ in xrange(options.num_questions):
+    def questions(self, question_count, options):
+        for _ in xrange(question_count):
             question_type = self.pick_next_question_type()
             yield self.generate_question(question_type, options)
 
