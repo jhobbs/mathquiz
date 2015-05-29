@@ -211,8 +211,8 @@ class BaseMultiplication(Question):
 
     def _generate(self):
         max_val = self.provided_options.get('max_val')
-        self.a = self._generator(max_val=self.provided_options.get('max_val'))
-        self.b = self._generator(max_val=self.provided_options.get('max_val'))
+        self.a = self._generator(max_val=max_val)
+        self.b = self._generator(max_val=max_val)
         self.answer = self.a * self.b
 
     def explain(self):
@@ -235,6 +235,7 @@ class FractionMultiplication(BaseMultiplication):
 
     def check_answer(self, answer):
         return self.answer == Fraction(answer)
+
 
 class Subtraction(Question):
     name = "subtraction"
@@ -316,7 +317,7 @@ class Modulo(Question):
 
 builtin_question_types = [
     IntegerComparison,
-    #FractionComparison,
+    # FractionComparison,
     NextMultiple,
     Addition,
     CountBy,
