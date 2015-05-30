@@ -138,8 +138,11 @@ class Exponent(Question):
     max_val = 9
 
     def _generate(self):
-        self.a = random_digit(max_val=self.provided_options.get('max_val'))
-        self.b = random_digit(max_val=self.provided_options.get('max_val'))
+        max_val = self.provided_options.get('max_val')
+        if max_val is None:
+            max_val = self.max_val
+        self.a = random_digit(max_val=max_val)
+        self.b = random_digit(max_val=max_val)
         self.answer = self.a ** self.b
 
     def explain(self):
@@ -154,8 +157,11 @@ class Addition(Question):
     max_val = 100000
 
     def _generate(self):
-        self.a = random_digit(max_val=self.provided_options.get('max_val'))
-        self.b = random_digit(max_val=self.provided_options.get('max_val'))
+        max_val = self.provided_options.get('max_val')
+        if max_val is None:
+            max_val = self.max_val
+        self.a = random_digit(max_val=max_val)
+        self.b = random_digit(max_val=max_val)
         self.answer = self.a + self.b
 
     def explain(self):
@@ -311,12 +317,15 @@ class Modulo(Question):
     max_val = 12
 
     def _generate(self):
+        max_val = self.provided_options.get('max_val')
+        if max_val is None:
+            max_val = self.max_val
         self.divisor = random_digit(
             min_val=1,
-            max_val=self.provided_options.get('max_val'))
+            max_val=max_val)
         self.dividend = random_digit(
             min_val=self.divisor,
-            max_val=self.provided_options.get('max_val'))
+            max_val=max_val)
         self.answer = self.dividend % self.divisor
 
     def explain(self):
