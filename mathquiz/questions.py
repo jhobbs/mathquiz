@@ -221,7 +221,7 @@ class BaseMultiplication(Question):
     def _generate(self):
         max_val = self.provided_options.get('max_val')
 
-        if max_val == None:
+        if max_val is None:
             max_val = self.max_val
 
         self.a = self._generator(max_val=max_val)

@@ -64,48 +64,75 @@ def group_by_correctness(question_results):
     return correct, incorrect
 
 
-def display_stats(args):
-    user = args.user
-    print("Stats for %s:" % user)
+def generate_stats(user):
+    results = {
+        'quizes': {},
+        'questions': {},
+        'question_types': {},
+    }
+
     user_data = get_current_user_data(user)
     num_quizes = len(user_data['results'])
-    print("Quizes completed: %d" % (num_quizes))
+    results['quizes']['completed'] = num_quizes
+
     questions = questions_from_user_data(user_data)
 
     if len(questions) == 0:
-        print("No questions answered yet.")
         return
 
-    correct_questions, incorrect_questions = group_by_correctness(questions)
-    print("Total questions: %d" % len(questions))
-    print("Correctly answered questions: %d" % len(correct_questions))
-    print("Overall success rate: %d%%" % (
-        int(float(len(correct_questions))/len(questions) * 100)))
+    results['questions']['total'] = len(questions)
+    correct_questions, _ = group_by_correctness(questions)
+    results['questions']['correct'] = len(correct_questions)
+    results['questions']['success_rate'] = \
+        int(float(len(correct_questions))/len(questions) * 100)
     by_mastery = group_by_mastery(builtin_question_types, questions)
 
+    for question_type in builtin_question_types:
+        results['question_types'][question_type] = dict()
+
     for mastery, question_types in by_mastery.iteritems():
-        strings = [unicode(question_type) for question_type in question_types]
-        if len(strings) == 0:
-            display = "None"
-        else:
-            display = " ".join(strings)
+        for question_type in question_types:
+            results['question_types'][question_type]['mastery'] = mastery
 
-        print("%s: %s" % (mastery, display))
+    results['mastery_size'] = MASTERY_SIZE
 
-    print("History for the last %d questions of each type:" % MASTERY_SIZE)
     for question_type in builtin_question_types:
         questions_of_type = filter(
             lambda x: x.question.name == question_type.name, questions)
         relevant_questions = questions_of_type[-MASTERY_SIZE:]
+        results['question_types'][question_type]['total'] = \
+            len(relevant_questions)
+        correct_of_type, _ = group_by_correctness(relevant_questions)
+        results['question_types'][question_type]['correct'] = \
+            len(correct_of_type)
 
-        if len(relevant_questions) == 0:
-            print("%s: no answers." % question_type.name)
-            continue
+    return results
 
-        correct_of_type, _ = group_by_correctness(
-            relevant_questions)
-        print("%s: %d/%d" % (
-            question_type.name, len(correct_of_type), len(relevant_questions)))
+
+def display_stats(args):
+    user = args.user
+    print("Stats for %s:" % user)
+    stats = generate_stats(user)
+    print("Quizes completed: %d" % stats['quizes']['completed'])
+
+    if stats['questions']['total'] == 0:
+        print("No questions answered yet.")
+        return
+
+    print("Total questions: %d" % stats['questions']['total'])
+    print("Correctly answered questions: %d" % stats['questions']['correct'])
+    print("Overall success rate: %d%%" % stats['questions']['success_rate'])
+
+    print('Per question history for last %d of each type' % (
+        stats['mastery_size']))
+
+    for question_type, history in stats['question_types'].iteritems():
+        print('%s: %s, %s/%s' % (
+            question_type,
+            history['mastery'],
+            history['correct'],
+            history['total'],
+        ))
 
 
 def setup_parser(parser):
