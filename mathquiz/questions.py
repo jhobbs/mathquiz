@@ -1,4 +1,6 @@
 import random
+import uuid
+
 from fractions import Fraction
 
 # FIXME: shouldn't need the max_val None checks - provided_options
@@ -64,6 +66,7 @@ class Question(object):
 
     def __init__(self, options):
         self.provided_options = options
+        self.uuid = unicode(uuid.uuid4())
         self._generate()
 
     @abstractproperty
