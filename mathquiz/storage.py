@@ -26,7 +26,7 @@ def get_user_yaml_path(user):
 
 
 def get_default_user_data():
-    return dict(results=[])
+    return dict(results=[], unanswered_questions=[])
 
 
 def get_current_user_data(user):
@@ -37,12 +37,20 @@ def get_current_user_data(user):
     return get_default_user_data()
 
 
-def store_quiz_results_local(user, results):
+def add_to_local_storage_list(user, list_name, item):
     init_local_storage(user)
     user_yaml_path = get_user_yaml_path(user)
     current_user_data = get_current_user_data(user)
-    current_user_data['results'].append(results)
+    current_user_data[list_name].append(item)
     yaml_out = yaml.dump(current_user_data)
 
     with open(user_yaml_path, "w") as user_yaml_file:
         user_yaml_file.write(yaml_out)
+
+
+def store_quiz_results_local(user, results):
+    add_to_local_storage_list(user, 'results', results)
+
+
+def add_unanswered_question(user, question):
+    add_to_local_storage_list(user, 'unanswered_questions', question)
