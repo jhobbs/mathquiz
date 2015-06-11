@@ -2,6 +2,10 @@ import random
 import subprocess
 
 from mathquiz.quiz import Quiz
+from mathquiz.results import (
+    QuestionResult,
+    QuizResult,
+    )
 from mathquiz.storage import (
     get_current_user_data,
     store_quiz_results_local,
@@ -27,29 +31,6 @@ bad_names = [
     'imbecile',
     'chump',
     ]
-
-
-class QuestionResult(object):
-    def __init__(self, question, answer, result):
-        self.question = question
-        self.answer = answer
-        self.result = result
-
-
-class QuizResult(object):
-    def __init__(self, results=None):
-        if results is None:
-            self.results = []
-        else:
-            self.results = results
-
-    @property
-    def num_questions(self):
-        return len(self.results)
-
-    @property
-    def num_correct(self):
-        return sum([result.result for result in self.results])
 
 
 def print_quiz_result(quiz_result):
