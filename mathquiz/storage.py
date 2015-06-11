@@ -54,3 +54,12 @@ def store_quiz_results_local(user, results):
 
 def add_unanswered_question(user, question):
     add_to_local_storage_list(user, 'unanswered_questions', question)
+
+
+def get_unanswered_question(user, question_uuid):
+    user_data = get_current_user_data(user)
+    for question in user_data['unanswered_questions']:
+        if question.uuid == question_uuid:
+            return question
+
+    return None
