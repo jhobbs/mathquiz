@@ -341,6 +341,25 @@ class Modulo(Question):
             )
 
 
+class RectangularArea(Question):
+    name = "rectangular-area"
+    max_val = 100
+
+    def _generate(self):
+        self.length = random_digit(min_val=1, max_val=12)
+        self.width = random_digit(min_val=1, max_val=12)
+        self.answer = self.length * self.width
+
+    def explain(self):
+        return "Find the area of the rectangle."
+
+    def question_string(self):
+        return "Find the area of a %d by %d rectangle: " % (
+            self.length,
+            self.width,
+            )
+
+
 builtin_question_types = [
     IntegerComparison,
     # FractionComparison,
@@ -353,5 +372,6 @@ builtin_question_types = [
     Rounding,
     Division,
     Modulo,
-    Exponent
+    Exponent,
+    RectangularArea,
     ]
