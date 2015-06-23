@@ -343,7 +343,7 @@ class Modulo(Question):
 
 class RectangularArea(Question):
     name = "rectangular-area"
-    max_val = 100
+    max_val = 12
 
     def _generate(self):
         self.length = random_digit(min_val=1, max_val=12)
@@ -355,6 +355,25 @@ class RectangularArea(Question):
 
     def question_string(self):
         return "Find the area of a %d by %d rectangle: " % (
+            self.length,
+            self.width,
+            )
+
+
+class RectangularPerimeter(Question):
+    name = "rectangular-perimeter"
+    max_val = 12
+
+    def _generate(self):
+        self.length = random_digit(min_val=1, max_val=12)
+        self.width = random_digit(min_val=1, max_val=12)
+        self.answer =  2 * (self.length + self.width)
+
+    def explain(self):
+        return "Find the perimeter of the rectangle."
+
+    def question_string(self):
+        return "Find the perimeter of a %d by %d rectangle: " % (
             self.length,
             self.width,
             )
@@ -374,4 +393,5 @@ builtin_question_types = [
     Modulo,
     Exponent,
     RectangularArea,
+    RectangularPerimeter,
     ]
