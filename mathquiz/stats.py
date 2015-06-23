@@ -77,10 +77,13 @@ def generate_stats(user):
 
     questions = questions_from_user_data(user_data)
 
-    if len(questions) == 0:
-        return
-
     results['questions']['total'] = len(questions)
+
+    if len(questions) == 0:
+        results['questions']['correct'] = 0
+        results['questions']['success_rate'] = 0
+        return results
+
     correct_questions, _ = group_by_correctness(questions)
     results['questions']['correct'] = len(correct_questions)
     results['questions']['success_rate'] = \
