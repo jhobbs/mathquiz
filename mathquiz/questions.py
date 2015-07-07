@@ -92,6 +92,10 @@ class Question(object):
     def check_answer(self, answer):
         return str(answer) == str(self.answer)
 
+    @property
+    def graphic_cue(self):
+        return {}
+
 
 class BaseComparison(Question):
     """Compare two values using <, > and =."""
@@ -346,18 +350,22 @@ class RectangularArea(Question):
     max_val = 12
 
     def _generate(self):
-        self.length = random_digit(min_val=1, max_val=12)
+        self.height = random_digit(min_val=1, max_val=12)
         self.width = random_digit(min_val=1, max_val=12)
-        self.answer = self.length * self.width
+        self.answer = self.height * self.width
 
     def explain(self):
         return "Find the area of the rectangle."
 
     def question_string(self):
         return "Find the area of a %d by %d rectangle: " % (
-            self.length,
             self.width,
+            self.height,
             )
+
+    @property
+    def graphic_cue(self):
+        return {'rectangle': {'width': self.width, 'height': self.height}}
 
 
 class RectangularPerimeter(Question):
