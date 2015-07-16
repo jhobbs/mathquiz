@@ -64,10 +64,14 @@ class Question(object):
         }
     }
 
-    def __init__(self, options):
+    def __init__(self, options, properties=None):
         self.provided_options = options
         self.uuid = unicode(uuid.uuid4())
-        self._generate()
+        if properties is None:
+            self._generate()
+        else:
+            for key, value in properties.iteritems():
+                setattr(self, key, value)
 
     @abstractproperty
     def name(self):
