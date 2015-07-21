@@ -394,6 +394,8 @@ class RectangularPerimeter(RectangleQuestion):
             self.height,
             )
 
+def question_name_to_class_name(question_name):
+    return question_name.title().replace('-','').replace('_', '')
 
 builtin_question_types = [
     IntegerComparison,
