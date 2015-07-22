@@ -6,6 +6,12 @@ from mathquiz.stats import (
     )
 
 
+from mathquiz.storage import (
+    add_unanswered_question,
+    get_current_user_data,
+    )
+
+
 UNMASTERED_BOOST = 5
 
 
@@ -43,3 +49,11 @@ class Quiz(object):
             for arg, value in option_vars.iteritems()
             if arg.startswith("%s_" % (question.name))}
         return question(question_options)
+
+
+def get_next_question_by_history(user):
+    user_data = get_current_user_data(user)
+    quiz = Quiz(builtin_question_types, user_data)
+    [question] = quiz.questions(1, defaultoptions)
+    add_unanswered_question(user, question)
+    return question
