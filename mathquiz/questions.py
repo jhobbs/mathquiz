@@ -208,7 +208,7 @@ class CountBy(Question):
     """Count by an integer"""
     def _generate(self):
         self.offset = random.randint(0, 9)
-        self.count_by = random.randint(0, 9)
+        self.count_by = random.randint(1, 9)
         iterations = random.randint(1, 9)
         self.answer_list = [
             "%d" % (self.offset + self.count_by * i)
