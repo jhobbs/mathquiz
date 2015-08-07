@@ -153,14 +153,14 @@ class Exponent(Question):
         if max_val is None:
             max_val = self.max_val
         self.a = random_digit(max_val=max_val)
-        self.b = random_digit(max_val=max_val)
+        self.b = random_digit(max_val=4)
         self.answer = self.a ** self.b
 
     def explain(self):
         return "Exponent: raise a number to the given power."
 
     def question_string(self):
-        return "%d**%d = " % (self.a, self.b)
+        return "%d^%d = " % (self.a, self.b)
 
 
 class Addition(Question):
