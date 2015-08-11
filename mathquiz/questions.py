@@ -352,7 +352,7 @@ class Modulo(Question):
             )
 
 
-class GCD(Question):
+class Gcd(Question):
     name = "gcd"
     max_val = 20
 
@@ -437,5 +437,5 @@ builtin_question_types = [
     Exponent,
     RectangularArea,
     RectangularPerimeter,
-    GCD,
+    Gcd,
     ]
