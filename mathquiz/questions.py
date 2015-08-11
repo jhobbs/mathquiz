@@ -328,7 +328,7 @@ class Division(Question):
 
 class Modulo(Question):
     name = "modulo"
-    max_val = 12
+    max_val = 24
 
     def _generate(self):
         max_val = self.provided_options.get('max_val')
