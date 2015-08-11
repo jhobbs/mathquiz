@@ -1,7 +1,10 @@
 import random
 import uuid
 
-from fractions import Fraction
+from fractions import (
+    gcd,
+    Fraction,
+    )
 
 # FIXME: shouldn't need the max_val None checks - provided_options
 # should get the default value.
@@ -349,6 +352,28 @@ class Modulo(Question):
             )
 
 
+class GCD(Question):
+    name = "gcd"
+    max_val = 20
+
+    def _generate(self):
+        max_val = self.provided_options.get('max_val')
+        if max_val is None:
+            max_val = self.max_val
+        self.a = random_digit(max_val=max_val)
+        self.b = random_digit(max_val=max_val)
+        self.answer = gcd(self.a, self.b)
+
+    def explain(self):
+        return "Find the greatest common denominator"
+
+    def question_string(self):
+        return "gcd(%d, %d) = " % (
+            self.a,
+            self.b,
+            )
+
+
 class RectangleQuestion(Question):
     def _generate(self):
         self.height = random_digit(min_val=1, max_val=12)
@@ -412,4 +437,5 @@ builtin_question_types = [
     Exponent,
     RectangularArea,
     RectangularPerimeter,
+    GCD,
     ]
