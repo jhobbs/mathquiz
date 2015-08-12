@@ -401,6 +401,12 @@ class RectangularArea(RectangleQuestion):
             self.height,
             )
 
+    @property
+    def graphic_cue(self):
+        graphic_cue = super(RectangularArea, self).graphic_cue
+        graphic_cue['rectangle']['solid'] = True
+        return graphic_cue
+
 
 class RectangularPerimeter(RectangleQuestion):
     name = "rectangular-perimeter"
