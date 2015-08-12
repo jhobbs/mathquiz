@@ -320,7 +320,7 @@ class Division(Question):
         return "Divide one number by the other"
 
     def question_string(self):
-        return "%d %% %d = " % (
+        return "%d / %d = " % (
             self.dividend,
             self.divisor
             )
