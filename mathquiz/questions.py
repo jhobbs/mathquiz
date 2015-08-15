@@ -1,4 +1,5 @@
 import random
+import string
 import uuid
 
 from fractions import (
@@ -104,6 +105,9 @@ class Question(object):
     @property
     def graphic_cue(self):
         return {}
+
+    def fancy_name(self):
+        return string.capwords(self.name.replace('-', ' ').replace('_', ' '))
 
 
 class BaseComparison(Question):
