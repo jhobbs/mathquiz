@@ -96,8 +96,9 @@ class Question(object):
         """Return the question string itself."""
         pass
 
-    def check_answer(self, answer):
-        return str(answer) == str(self.answer)
+    def check_answer(self, given_answer):
+        normalized_answer = " ".join(str(given_answer).split())
+        return str(normalized_answer) == str(self.answer)
 
     @property
     def graphic_cue(self):
@@ -225,10 +226,6 @@ class CountBy(Question):
     def question_string(self):
         return "Count by %d's starting at %d up to %s: " % (
             self.count_by, self.offset, self.answer_list[-1])
-
-    def check_answer(self, given_answer):
-        normalized_answer = " ".join(given_answer.split())
-        return normalized_answer == self.answer
 
 
 class BaseMultiplication(Question):
