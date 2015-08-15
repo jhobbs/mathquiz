@@ -7,9 +7,6 @@ from fractions import (
     Fraction,
     )
 
-# FIXME: shouldn't need the max_val None checks - provided_options
-# should get the default value.
-
 from abc import (
     ABCMeta,
     abstractmethod,
@@ -109,6 +106,11 @@ class Question(object):
     def fancy_name(self):
         return string.capwords(self.name.replace('-', ' ').replace('_', ' '))
 
+    def option_get(self, option_name):
+        if option_name in self.provided_options:
+            return self.provided_options(option_name)
+        return self.options[option_name]['default']
+
 
 class BaseComparison(Question):
     """Compare two values using <, > and =."""
@@ -158,9 +160,7 @@ class Exponent(Question):
     max_val = 9
 
     def _generate(self):
-        max_val = self.provided_options.get('max_val')
-        if max_val is None:
-            max_val = self.max_val
+        max_val = self.option_get('max_val')
         self.a = random_digit(max_val=max_val)
         self.b = random_digit(max_val=4)
         self.answer = self.a ** self.b
@@ -177,9 +177,7 @@ class Addition(Question):
     max_val = 100000
 
     def _generate(self):
-        max_val = self.provided_options.get('max_val')
-        if max_val is None:
-            max_val = self.max_val
+        max_val = self.option_get('max_val')
         self.a = random_digit(max_val=max_val)
         self.b = random_digit(max_val=max_val)
         self.answer = self.a + self.b
@@ -239,11 +237,7 @@ class BaseMultiplication(Question):
         return self.generator.__func__(*args, **kwargs)
 
     def _generate(self):
-        max_val = self.provided_options.get('max_val')
-
-        if max_val is None:
-            max_val = self.max_val
-
+        max_val = self.option_get('max_val')
         self.a = self._generator(max_val=max_val)
         self.b = self._generator(max_val=max_val)
         self.answer = self.a * self.b
@@ -280,10 +274,7 @@ class Subtraction(Question):
     max_val = 100000
 
     def _generate(self):
-        max_val = self.provided_options.get('max_val')
-        if max_val is None:
-            max_val = self.max_val
-
+        max_val = self.option_get('max_val')
         self.a = random_digit(max_val=max_val)
         self.b = random_digit(max_val=self.a)
         self.answer = self.a - self.b
@@ -318,9 +309,7 @@ class Division(Question):
     max_val = 12
 
     def _generate(self):
-        max_val = self.provided_options.get('max_val')
-        if max_val is None:
-            max_val = self.max_val
+        max_val = self.option_get('max_val')
         self.divisor = random_digit(
             min_val=1, max_val=max_val)
         self.answer = random_digit(
@@ -342,7 +331,7 @@ class Modulo(Question):
     max_val = 24
 
     def _generate(self):
-        max_val = self.provided_options.get('max_val')
+        max_val = self.option_get('max_val')
         if max_val is None:
             max_val = self.max_val
         self.divisor = random_digit(
@@ -368,7 +357,7 @@ class Gcd(Question):
     max_val = 20
 
     def _generate(self):
-        max_val = self.provided_options.get('max_val')
+        max_val = self.option_get('max_val')
         if max_val is None:
             max_val = self.max_val
         self.a = random_digit(max_val=max_val)
@@ -390,7 +379,7 @@ class GreatestFactor(Question):
     max_val = 20
 
     def _generate(self):
-        max_val = self.provided_options.get('max_val')
+        max_val = self.option_get('max_val')
         if max_val is None:
             max_val = self.max_val
         self.a = random_digit(max_val=max_val)
