@@ -262,7 +262,12 @@ class FractionMultiplication(BaseMultiplication):
     max_val = 9
 
     def check_answer(self, answer):
-        return self.answer == Fraction(answer)
+        try:
+            fraction_answer = Fraction(answer)
+        except ValueError:
+            return False
+
+        return self.answer == fraction_answer
 
 
 class Subtraction(Question):
