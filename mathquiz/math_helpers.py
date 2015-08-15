@@ -72,3 +72,10 @@ def find_next_multiple(number, factor, direction):
         return ((number / factor) + 1) * factor
     else:
         raise Exception('Bad direction: %s' % direction)
+
+
+def greatest_factor(number):
+    start = number/2
+    for i in range(start, 0, -1):
+        if number % i == 0:
+            return i

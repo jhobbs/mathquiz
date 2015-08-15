@@ -17,6 +17,7 @@ from abc import (
 
 from mathquiz.math_helpers import (
     find_next_multiple,
+    greatest_factor,
     random_digit,
     random_fraction,
     )
@@ -380,6 +381,26 @@ class Gcd(Question):
             )
 
 
+class GreatestFactor(Question):
+    name = "greatest-factor"
+    max_val = 20
+
+    def _generate(self):
+        max_val = self.provided_options.get('max_val')
+        if max_val is None:
+            max_val = self.max_val
+        self.a = random_digit(max_val=max_val)
+        self.answer = greatest_factor(self.a)
+
+    def explain(self):
+        return "Find the greatest factor of the number."
+
+    def question_string(self):
+        return "gf(%d) = " % (
+            self.a,
+            )
+
+
 class RectangleQuestion(Question):
     def _generate(self):
         self.height = random_digit(min_val=1, max_val=12)
@@ -450,4 +471,5 @@ builtin_question_types = [
     RectangularArea,
     RectangularPerimeter,
     Gcd,
+    GreatestFactor,
     ]
