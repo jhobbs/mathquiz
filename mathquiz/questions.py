@@ -450,7 +450,7 @@ def question_name_to_class_name(question_name):
 
 builtin_question_types = [
     IntegerComparison,
-    # FractionComparison,
+    FractionComparison,
     NextMultiple,
     Addition,
     CountBy,
