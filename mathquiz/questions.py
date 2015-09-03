@@ -382,7 +382,7 @@ class GreatestFactor(Question):
         max_val = self.option_get('max_val')
         if max_val is None:
             max_val = self.max_val
-        self.a = random_digit(max_val=max_val)
+        self.a = random_digit(min_val=1, max_val=max_val)
         self.answer = greatest_factor(self.a)
 
     def explain(self):
