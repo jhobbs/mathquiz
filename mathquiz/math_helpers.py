@@ -75,6 +75,9 @@ def find_next_multiple(number, factor, direction):
 
 
 def greatest_factor(number):
+    if number == 1:
+        return 1
+
     start = number/2
     for i in range(start, 0, -1):
         if number % i == 0:
