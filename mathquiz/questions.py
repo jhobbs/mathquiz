@@ -332,8 +332,6 @@ class Modulo(Question):
 
     def _generate(self):
         max_val = self.option_get('max_val')
-        if max_val is None:
-            max_val = self.max_val
         self.divisor = random_digit(
             min_val=1,
             max_val=max_val)
@@ -358,8 +356,6 @@ class Gcd(Question):
 
     def _generate(self):
         max_val = self.option_get('max_val')
-        if max_val is None:
-            max_val = self.max_val
         self.a = random_digit(max_val=max_val)
         self.b = random_digit(max_val=max_val)
         self.answer = gcd(self.a, self.b)
@@ -380,8 +376,6 @@ class GreatestFactor(Question):
 
     def _generate(self):
         max_val = self.option_get('max_val')
-        if max_val is None:
-            max_val = self.max_val
         self.a = random_digit(min_val=1, max_val=max_val)
         self.answer = greatest_factor(self.a)
 
