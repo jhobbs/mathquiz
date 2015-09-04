@@ -66,8 +66,11 @@ class Question(object):
         }
     }
 
-    def __init__(self, options, properties=None):
-        self.provided_options = options
+    def __init__(self, options=None, properties=None):
+        if options is None:
+            self.provided_options = {}
+        else:
+            self.provided_options = options
         self.uuid = unicode(uuid.uuid4())
         if properties is None:
             self._generate()
