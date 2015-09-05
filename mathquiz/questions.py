@@ -111,7 +111,7 @@ class Question(object):
 
     def option_get(self, option_name):
         if option_name in self.provided_options:
-            return self.provided_options(option_name)
+            return self.provided_options[option_name]
         return self.options[option_name]['default']
 
 
