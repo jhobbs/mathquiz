@@ -431,7 +431,7 @@ class RectangularPerimeter(RectangleQuestion):
 
     def _generate(self):
         super(RectangularPerimeter, self)._generate()
-        self.answer =  2 * (self.height + self.width)
+        self.answer = 2 * (self.height + self.width)
 
     def explain(self):
         return "Find the perimeter of the rectangle."
@@ -442,8 +442,30 @@ class RectangularPerimeter(RectangleQuestion):
             self.height,
             )
 
+
+class ReadAnalogClock(Question):
+    name = "read_analog_clock"
+
+    def _generate(self):
+        self.hours = random_digit(min_val=1, max_val=12)
+        self.minutes = random.choice(range(0, 60, 6))
+        self.answer = "%d:%02d" % (self.hours, self.minutes)
+
+    def explain(self):
+        return "Tell the time indicated by the clock."
+
+    def question_string(self):
+        return "What time is it?: "
+
+    @property
+    def graphic_cue(self):
+        graphic_cue = {'clock': {'hours': self.hours, 'minutes': self.minutes}}
+        return graphic_cue
+
+
 def question_name_to_class_name(question_name):
-    return question_name.title().replace('-','').replace('_', '')
+    return question_name.title().replace('-', '').replace('_', '')
+
 
 builtin_question_types = [
     IntegerComparison,
@@ -462,4 +484,5 @@ builtin_question_types = [
     RectangularPerimeter,
     Gcd,
     GreatestFactor,
+    ReadAnalogClock,
     ]
