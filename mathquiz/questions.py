@@ -448,7 +448,7 @@ class ReadAnalogClock(Question):
 
     def _generate(self):
         self.hours = random_digit(min_val=1, max_val=12)
-        self.minutes = random.choice(range(0, 60, 6))
+        self.minutes = random.choice(range(0, 60, 5))
         self.answer = "%d:%02d" % (self.hours, self.minutes)
 
     def explain(self):
