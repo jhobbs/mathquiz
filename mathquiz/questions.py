@@ -483,11 +483,6 @@ class AddTime(Question):
             self.delta_hours, self.delta_minutes,
             self.start_hours, self.start_minutes)
 
-    @property
-    def graphic_cue(self):
-        graphic_cue = {'clock': {'hours': self.start_hours, 'minutes': self.start_minutes}}
-        return graphic_cue
-
 
 def question_name_to_class_name(question_name):
     return question_name.title().replace('-', '').replace('_', '')
