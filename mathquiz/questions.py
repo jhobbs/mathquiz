@@ -473,13 +473,37 @@ class AddTime(Question):
         self.delta_hours = random_digit(min_val=1, max_val=12)
         self.delta_minutes = random.choice(range(0, 60))
         self.answer = "%d:%02d" % add_time(
-            self.start_hours, self.start_minutes, self.delta_hours, self.delta_minutes)
+            self.start_hours, self.start_minutes,
+            self.delta_hours, self.delta_minutes)
 
     def explain(self):
-        return "Find the final time by adding hours and minutes to the start time."
+        return ("Find the final time by adding"
+                " hours and minutes to the start time.")
 
     def question_string(self):
         return "What time is %d hours and %d minutes after %d:%02d?: " % (
+            self.delta_hours, self.delta_minutes,
+            self.start_hours, self.start_minutes)
+
+
+class SubtractTime(Question):
+    name = "subtract_time"
+
+    def _generate(self):
+        self.start_hours = random_digit(min_val=1, max_val=12)
+        self.start_minutes = random.choice(range(0, 60))
+        self.delta_hours = random_digit(min_val=1, max_val=12)
+        self.delta_minutes = random.choice(range(0, 60))
+        self.answer = "%d:%02d" % add_time(
+            self.start_hours, self.start_minutes,
+            -self.delta_hours, -self.delta_minutes)
+
+    def explain(self):
+        return ("Find the final time by subtracting hours"
+                " and minutes from the start time.")
+
+    def question_string(self):
+        return "What time is %d hours and %d minutes before %d:%02d?: " % (
             self.delta_hours, self.delta_minutes,
             self.start_hours, self.start_minutes)
 
@@ -507,4 +531,5 @@ builtin_question_types = [
     GreatestFactor,
     ReadAnalogClock,
     AddTime,
+    SubtractTime,
     ]
