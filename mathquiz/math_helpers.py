@@ -82,3 +82,14 @@ def greatest_factor(number):
     for i in range(start, 0, -1):
         if number % i == 0:
             return i
+
+
+def add_time(start_hours, start_minutes, delta_hours, delta_minutes):
+    total_minutes = start_minutes + delta_minutes
+    carry_hours = total_minutes / 60
+    final_minutes = total_minutes % 60
+    total_hours = delta_hours + carry_hours
+    final_hours = (start_hours + total_hours) % 12
+    if final_hours == 0:
+        final_hours = 12
+    return final_hours, final_minutes

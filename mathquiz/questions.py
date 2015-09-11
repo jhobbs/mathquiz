@@ -14,6 +14,7 @@ from abc import (
     )
 
 from mathquiz.math_helpers import (
+    add_time,
     find_next_multiple,
     greatest_factor,
     random_digit,
@@ -463,6 +464,31 @@ class ReadAnalogClock(Question):
         return graphic_cue
 
 
+class AddTime(Question):
+    name = "add_time"
+
+    def _generate(self):
+        self.start_hours = random_digit(min_val=1, max_val=12)
+        self.start_minutes = random.choice(range(0, 60))
+        self.delta_hours = random_digit(min_val=1, max_val=12)
+        self.delta_minutes = random.choice(range(0, 60))
+        self.answer = "%d:%02d" % add_time(
+            self.start_hours, self.start_minutes, self.delta_hours, self.delta_minutes)
+
+    def explain(self):
+        return "Find the final time by adding hours and minutes to the start time."
+
+    def question_string(self):
+        return "What time is %d hours and %d minutes after %d:%02d?: " % (
+            self.delta_hours, self.delta_minutes,
+            self.start_hours, self.start_minutes)
+
+    @property
+    def graphic_cue(self):
+        graphic_cue = {'clock': {'hours': self.start_hours, 'minutes': self.start_minutes}}
+        return graphic_cue
+
+
 def question_name_to_class_name(question_name):
     return question_name.title().replace('-', '').replace('_', '')
 
@@ -485,4 +511,5 @@ builtin_question_types = [
     Gcd,
     GreatestFactor,
     ReadAnalogClock,
+    AddTime,
     ]
