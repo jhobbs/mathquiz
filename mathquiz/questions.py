@@ -316,6 +316,32 @@ class Rounding(Question):
             )
 
 
+class DivisionRemainder(Question):
+    name = "division_remainder"
+    max_dividend = 999
+    max_divisor = 9
+
+    def _generate(self):
+        max_dividend = self.option_get('max_dividend')
+        max_divisor = self.option_get('max_divisor')
+        self.divisor = random_digit(
+            min_val=1, max_val=max_divisor)
+        self.dividend = random_digit(
+            min_val=self.divisor, max_val=max_dividend)
+        whole_part = self.dividend / self.divisor
+        remainder = self.dividend % self.divisor
+        self.answer = "%dr%d" % (whole_part, remainder)
+
+    def explain(self):
+        return "Divide one number by the other and include remainder in the answer."
+
+    def question_string(self):
+        return "%d / %d = " % (
+            self.dividend,
+            self.divisor
+            )
+
+
 class Division(Question):
     name = "division"
     max_dividend = 999
@@ -543,4 +569,5 @@ builtin_question_types = [
     ReadAnalogClock,
     AddTime,
     SubtractTime,
+    DivisionRemainder,
     ]
