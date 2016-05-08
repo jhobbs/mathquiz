@@ -64,6 +64,14 @@ class Question(object):
         'max_val': {
             'help': "Maximum value for operation",
             'type': int,
+        },
+        'max_dividend': {
+            'help': "Maximum value of dividend",
+            'type': int,
+        },
+        'max_divisor': {
+            'help': "Maximum value of divisor",
+            'type': int,
         }
     }
 
@@ -310,14 +318,17 @@ class Rounding(Question):
 
 class Division(Question):
     name = "division"
-    max_val = 12
+    max_dividend = 999
+    max_divisor = 9
 
     def _generate(self):
-        max_val = self.option_get('max_val')
+        max_dividend = self.option_get('max_dividend')
+        max_divisor = self.option_get('max_divisor')
         self.divisor = random_digit(
-            min_val=1, max_val=max_val)
+            min_val=1, max_val=max_divisor)
+        max_answer = max_dividend / self.divisor
         self.answer = random_digit(
-            max_val=max_val)
+            max_val=max_answer)
         self.dividend = self.divisor * self.answer
 
     def explain(self):
